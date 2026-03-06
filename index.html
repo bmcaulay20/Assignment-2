@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>US Population</title>
+</head>
+<body>
+  <h1>US Population</h1>
+
+  <table id="pop-table" border = "2" cellpadding = "5">
+    <thead>
+      <tr>
+        <th>Year</th>
+        <th>Population</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <script>
+    fetch("https://api.datausa.io/tesseract/data.jsonrecords?cube=acs_yg_total_population_5&measures=Population&drilldowns=Year", {cache: "reload"})
+      .then(response => response.json())
+      .then(data => {
+        const rows = data.data;
+        rows.sort((a, b) => a.Year - b.Year);
+
+        const tbody = document.querySelector("#pop-table tbody");
+
+        rows.forEach(item => {
+          const tr = document.createElement("tr");
+
+          const year = document.createElement("td");
+          year.textContent = item.Year;
+
+          const pop = document.createElement("td");
+          pop.textContent = Number(item.Population).toLocaleString();
+
+          tr.appendChild(year);
+          tr.appendChild(pop);
+          tbody.appendChild(tr);
+        });
+      });
+  </script>
+</body>
+</html>
